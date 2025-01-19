@@ -1,0 +1,62 @@
+﻿@RedactorApi_HostAddress = http://localhost:5001
+
+# POST {{RedactorApi_HostAddress}}/api/files
+# Content-Type: multipart/form-data; boundary=MfnBoundry
+# Accept: application/json
+# X-Version: 1.0
+
+# --MfnBoundry
+# Content-Disposition: form-data; name="file"; filename="EthanMichaelJohnson.pdf"
+# Content-Type: application/pdf
+
+# < "EthanMichaelJohnson.pdf"
+
+# --MfnBoundry--
+
+###
+
+POST {{RedactorApi_HostAddress}}/api/review
+Content-Type: application/json
+Accept: application/json
+
+{
+  "content": "This is some sample text that needs to be reviewed for sensitive information."
+}
+
+###
+
+POST {{RedactorApi_HostAddress}}/api/verify
+Content-Type: application/json
+Accept: application/json
+
+{
+    "content": "Purchase Order\n----------------\nDate: 10/05/2023\n----------------\nCustomer Name: CID-982305\nBilling Address: 1234 Oak Street, Suite 400, Springfield, IL, EN12 4TA\nPhone: (312) 555-7890 (555-876-5432)\nEmail: janedoe@company.com\n",
+    "threshold": 0.0,
+    "language": "en",
+    "startTag": "<span atyle:'color:red'>",
+    "endTag": "</span>"
+}
+
+###
+POST {{RedactorApi_HostAddress}}/api/review
+Content-Type: application/json
+Accept: application/json
+
+{
+    "content": "Purchase Order\n----------------\nDate: 10/05/2023\n----------------\nCustomer Name: CID-982305\nBilling Address: 1234 Oak Street, Suite 400, Springfield, IL, EN12 4TA\nPhone: (312) 555-7890 (555-876-5432)\nEmail: janedoe@company.com\n",
+    "threshold": 0.0,
+    "language": "en",
+    "startTag": "<span atyle:'color:red'>",
+    "endTag": "</span>"
+}
+
+
+###
+POST http://127.0.0.1:63449/analyze
+Content-Type: application/json
+Accept: application/json
+
+{
+  "text": "John Smith drivers license is AC432223",
+  "language": "en"
+}
