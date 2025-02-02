@@ -1,0 +1,48 @@
+services:
+  aspire-dashboard:
+    container_name: "aspire-dashboard"
+    image: "mcr.microsoft.com/dotnet/aspire-dashboard:8.0"
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"
+    ports:
+    - target: 18888
+      published: 18888
+    restart: unless-stopped
+  presidio:
+    container_name: "presidio"
+    image: "presidio-analyzer:latest"
+    environment:
+      PORT: "5001"
+      PATH: "/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      LANG: "C.UTF-8"
+      GPG_KEY: "E3FF2839C048B25C084DEBE9B26995E310250568"
+      PYTHON_VERSION: "3.9.21"
+      PYTHON_SHA256: "3126f59592c9b0d798584755f2bf7b081fa1ca35ce7a6fea980108d752a05bb1"
+      PIP_NO_CACHE_DIR: "1"
+      ANALYZER_CONF_FILE: "presidio_analyzer/conf/default_analyzer.yaml"
+      RECOGNIZER_REGISTRY_CONF_FILE: "presidio_analyzer/conf/default_recognizers.yaml"
+      NLP_CONF_FILE: "presidio_analyzer/conf/default.yaml"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_SERVICE_NAME: "presidio"
+    ports:
+    - target: 5001
+      published: 7001
+    restart: unless-stopped
+  RedactorApi:
+    container_name: "RedactorApi"
+    image: "redactorapi:latest"
+    environment:
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      HTTP_PORTS: "8080"
+      ConnectionStrings__presidio: "presidio:5001"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_SERVICE_NAME: "RedactorApi"
+    ports:
+    - target: 8080
+      published: 10000
+    - target: 8443
+      published: 10001
+    restart: unless-stopped

@@ -115,5 +115,4 @@ public class StringBuilderTrimBenchmark
         var result = sb.EndTrimAndRelease();
         return result.Length;
     }
-
 }

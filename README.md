@@ -35,6 +35,39 @@ These enhancements include:
     - [x] Highlighting the sensitive text.
 - [x] Include UK specific options.
 
+# Docker Compose from aspirate
+```cmd
+dotnet tool install -g aspirate
+cd src
+cd RedactorApiAspire.AppHost
+aspirate generate --output-format compose
+```
+
+```cmd
+dotnet tool install -g Microsoft.Aspire.Cli
+```
+
+Define your application’s configuration in an aspire.yaml file:
+
+```yaml
+name: redactorapi
+resources:
+  - type: container
+    image: redactorapi:latest
+    ports:
+      - 80
+```
+
+Run the following command to generate a Docker Compose file:
+```cmd
+docker build -t redactorapi:latest .
+docker push redactorapi:latest
+```
+
+Deploy your application to a Kubernetes cluster using the following command:
+```cmd
+aspire deploy -f aspire.yaml --kube-context <your_kubernetes_context>
+```
 
 # Chrome Extension
 

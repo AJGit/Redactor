@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/aspire-8.0.json",
+  "resources": {
+    "presidio": {
+      "type": "container.v0",
+      "connectionString": "{presidio.bindings.presidio.url}",
+      "image": "presidio-analyzer:latest",
+      "env": {
+        "PORT": "5001",
+        "PATH": "/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "LANG": "C.UTF-8",
+        "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
+        "PYTHON_VERSION": "3.9.21",
+        "PYTHON_SHA256": "3126f59592c9b0d798584755f2bf7b081fa1ca35ce7a6fea980108d752a05bb1",
+        "PIP_NO_CACHE_DIR": "1",
+        "ANALYZER_CONF_FILE": "presidio_analyzer/conf/default_analyzer.yaml",
+        "RECOGNIZER_REGISTRY_CONF_FILE": "presidio_analyzer/conf/default_recognizers.yaml",
+        "NLP_CONF_FILE": "presidio_analyzer/conf/default.yaml"
+      },
+      "bindings": {
+        "presidio": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "port": 7001,
+          "targetPort": 5001,
+          "external": true
+        }
+      }
+    },
+    "RedactorApi": {
+      "type": "project.v0",
+      "path": "../RedactorApi/RedactorApi.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "HTTP_PORTS": "{RedactorApi.bindings.http.targetPort}",
+        "ConnectionStrings__presidio": "{presidio.connectionString}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "external": true
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http",
+          "external": true
+        }
+      }
+    }
+  }
+}

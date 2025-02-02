@@ -1,0 +1,22 @@
+{
+  "projectPath": ".",
+  "outputPath": "aspirate-output",
+  "containerImageTags": [
+    "latest"
+  ],
+  "containerBuilder": "docker",
+  "outputFormat": "compose",
+  "privateRegistryEmail": "aspir8@aka.ms",
+  "includeDashboard": true,
+  "secrets": {
+    "salt": "RKCy7EDJAbYUhF/H",
+    "hash": "ZYt8ArxORTmJZvU2M7j\u002BhIWM4TPtjSXrILwZ2pPGawQ=",
+    "secrets": {
+      "presidio": {},
+      "RedactorApi": {
+        "ConnectionStrings__presidio": "RKCy7EDJAbYUhF/HDZy\u002B\u002B/lyLuZIF4JsmAVp2oKseY9EZwzBfdyb1Qk="
+      }
+    }
+  },
+  "processAllComponents": true
+}
